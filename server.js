@@ -1,7 +1,6 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const cors = require('cors')
-const { MongoClient } = require('mongodb')
 
 const app = express()
 
@@ -9,6 +8,8 @@ const app = express()
 // dotenv.config() will load the evirnment variables from .env file to the application
 // =========================dotenv.config()===========================================
 dotenv.config()
+const db = process.env.ATLAS_URI
+const port = process.env.PORT || 5000
 
 // =========================cors()===========================================
 // Calling use(cors()) will enable the express server to respond to preflight requests.
@@ -33,23 +34,6 @@ app.use(cors())
 // =========================express.json()===========================================
 app.use(express.json())
 
-const db = process.env.ATLAS_URI
-console.log('db', db)
-const client = new MongoClient(db, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-
-client.connect(function (err, DB) {
-  // Verify we got a good "DB" object
-  if (DB) {
-    console.log('DB', DB)
-    console.log('Successfully connected to MongoDB.')
-  } else {
-    console.log('error', err)
-  }
-})
-
 app.get('/api', (req, res) => {
   res.json({ text: 'Hello World' })
   // res.send(
@@ -57,5 +41,4 @@ app.get('/api', (req, res) => {
   // )
 })
 
-const port = process.env.PORT || 5000
 app.listen(port, () => console.log(`Listening on port ${port}...`))
