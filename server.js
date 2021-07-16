@@ -1,14 +1,17 @@
-const express = require('express')
-const dotenv = require('dotenv')
-const cors = require('cors')
+import express from 'express'
+import dotenv from 'dotenv'
+import cors from 'cors'
+import mongoose from 'mongoose'
+import { Todo } from './models/todo.js'
+import userRoutes from './routes/userRoutes.js'
 
 const app = express()
 
 // =========================dotenv.config()===========================================
-// dotenv.config() will load the evirnment variables from .env file to the application
+// dotenv.config() will load the env variables from .env file to the application
 // =========================dotenv.config()===========================================
 dotenv.config()
-const db = process.env.ATLAS_URI
+const dbURI = process.env.ATLAS_URI
 const port = process.env.PORT || 5000
 
 // =========================cors()===========================================
@@ -33,12 +36,52 @@ app.use(cors())
 // express.json() is a method inbuilt in express to recognize the incoming Request Object as a JSON Object.
 // =========================express.json()===========================================
 app.use(express.json())
+mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connection.once('open', function () {
+  console.log('Successfully connected to the mongoDB database.')
+})
 
-app.get('/api', (req, res) => {
-  res.json({ text: 'Hello World' })
-  // res.send(
-  //   'HEloo+++++++++++++++++++++++++++++++===================================='
-  // )
+// app.use((req, res, next) => {
+//   console.log('object')
+
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept'
+//   )
+//   next()
+// })
+
+// =========================Different routes===========================================
+// Different routes
+// =========================Different routes===========================================
+app.use('/api/users', userRoutes)
+
+app.get('/api', async (req, res) => {
+  let todoList
+  await Todo.find(function (err, todo) {
+    if (err) return console.error(err)
+    todoList = todo
+  })
+  res.json(todoList)
+})
+
+app.post('/api/todoinput', async (req, res) => {
+  const todo = new Todo(req.body)
+  let newTodo
+  await todo.save(function (err, todo) {
+    if (err) return console.error(err)
+    res.send(todo)
+  })
+})
+
+app.delete('/api/tododelete/:id', async (req, res) => {
+  console.log('req.params', req.params)
+  await Todo.deleteOne({ _id: req.params.id }, function (err) {
+    if (err) return handleError(err)
+    // deleted at most one todo document
+  })
+  res.send('Todo has been deleted.')
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}...`))
