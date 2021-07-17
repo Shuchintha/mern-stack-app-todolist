@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, ListGroup } from 'react-bootstrap'
+import { Button, Col, ListGroup, Row } from 'react-bootstrap'
 import ConfirmModal from '../modal/ConfirmModal'
 
 function UserListItem({ user, handleDeleteUser, handleUserEdit }) {
@@ -10,51 +10,68 @@ function UserListItem({ user, handleDeleteUser, handleUserEdit }) {
     body: 'If you click delete, the user data will be deleted permanently.',
     saveBtnText: 'Delete',
   }
-  const userEditModalText = {
-    title: 'Confirm User as Admin',
+  const usertoAdminModalText = {
+    title: 'Change status from User to Admin',
     body: 'Are you sure you want to give this user admin status.',
     saveBtnText: 'Add',
   }
+  const admintoUserEditModalText = {
+    title: 'Change status from Admin to User',
+    body: 'Are you sure you want to remove this users admin status.',
+    saveBtnText: 'Remove',
+  }
   const handleDelete = () => {
     handleDeleteUser(user._id)
+    setconfirmModalShow(false)
   }
 
   const handleAddAdmin = () => {
     handleUserEdit(user._id)
+    setuserEditModalShow(false)
   }
 
   return (
     <>
-      <ListGroup.Item
-        action
-        className=' d-flex justify-content-between align-items-center'
-        variant='light'
-      >
-        {user.email}
-        {user.isAdmin && ` (Admin)`}
-        <div>
+      <Row>
+        <Col sm={10}>
+          <ListGroup.Item
+            action
+            className=' d-flex justify-content-between align-items-center'
+            variant='light'
+          >
+            {user.email}
+            {user.isAdmin && ` (Admin)`}
+          </ListGroup.Item>
+        </Col>
+        <Col
+          className=' d-flex justify-content-between align-items-center'
+          sm={2}
+        >
           <Button variant='danger' onClick={() => setconfirmModalShow(true)}>
             Delete
           </Button>{' '}
-          {!user.isAdmin && (
-            <Button variant='dark' onClick={() => setuserEditModalShow(true)}>
-              Make Admin
-            </Button>
-          )}
-          <ConfirmModal
-            show={confirmModalShow}
-            onHide={() => setconfirmModalShow(false)}
-            ModalText={confirmModalText}
-            handleClick={handleDelete}
-          />
-          <ConfirmModal
-            show={userEditModalShow}
-            onHide={() => setuserEditModalShow(false)}
-            ModalText={userEditModalText}
-            handleClick={handleAddAdmin}
-          />
-        </div>
-      </ListGroup.Item>
+          <Button variant='dark' onClick={() => setuserEditModalShow(true)}>
+            {user.isAdmin ? 'Admin' : 'User'}
+          </Button>
+        </Col>
+      </Row>
+
+      <div>
+        <ConfirmModal
+          show={confirmModalShow}
+          onHide={() => setconfirmModalShow(false)}
+          ModalText={confirmModalText}
+          handleClick={handleDelete}
+        />
+        <ConfirmModal
+          show={userEditModalShow}
+          onHide={() => setuserEditModalShow(false)}
+          ModalText={
+            user.isAdmin ? admintoUserEditModalText : usertoAdminModalText
+          }
+          handleClick={handleAddAdmin}
+        />
+      </div>
     </>
   )
 }

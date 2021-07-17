@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import AdminCreateNewUser from './AdminCreateNewUser'
 import UsersList from './UsersList'
 
 function ManageUsers() {
@@ -40,7 +41,6 @@ function ManageUsers() {
   }
 
   const handleUserEdit = async id => {
-    console.log('sfffsdfsfdsffsfs', id, '  token ', userInfo.token)
     await updateUser(id).then(() => getUsersList())
   }
   useEffect(() => {
@@ -49,12 +49,12 @@ function ManageUsers() {
 
   return (
     <div>
+      <AdminCreateNewUser></AdminCreateNewUser>
       <UsersList
         usersList={usersList}
         handleDeleteUser={handleDeleteUser}
         handleUserEdit={handleUserEdit}
       ></UsersList>
-      {/* <UsersList usersList={usersList}></UsersList> */}
     </div>
   )
 }

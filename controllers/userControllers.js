@@ -1,4 +1,6 @@
 import User from '../models/userModel.js'
+import asyncHandler from 'express-async-handler'
+
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
@@ -10,7 +12,7 @@ const generateToken = id => {
   })
 }
 
-const userLogin = async (req, res) => {
+const userLogin = asyncHandler(async (req, res) => {
   const { email, password } = req.body
 
   const user = await User.findOne({ email })
@@ -27,9 +29,9 @@ const userLogin = async (req, res) => {
     res.status(401)
     throw new Error('Invalid email or password.')
   }
-}
+})
 
-const registerUser = async (req, res) => {
+const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body
   const name = firstName + ' ' + lastName
   console.log('body.', req.body)
@@ -56,16 +58,14 @@ const registerUser = async (req, res) => {
     res.status(400)
     throw new Error('Invalid user data')
   }
-}
+})
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = asyncHandler(async (req, res) => {
   let usersList
-  console.log('object getallusers')
   await User.find(function (err, users) {
     if (err) return console.error(err)
     usersList = users
   })
-  console.log('object getallusers', usersList)
 
   if (usersList) {
     res.json(usersList)
@@ -73,10 +73,9 @@ const getAllUsers = async (req, res) => {
     res.status(401)
     throw new Error('Invalid email or password.')
   }
-}
+})
 
-export const deleteUser = async (req, res) => {
-  console.log('id params', req.params.id)
+const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id)
 
   if (user) {
@@ -88,6 +87,23 @@ export const deleteUser = async (req, res) => {
     res.status(404)
     throw new Error('User not found')
   }
-}
+})
 
-export { userLogin, registerUser, getAllUsers }
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.body.id)
+  console.log('update user', req.body)
+
+  if (user) {
+    user.isAdmin = !user.isAdmin
+    const updatedUser = await user.save()
+    if (updatedUser.isAdmin) {
+      return res.json({ message: 'The user is now an admin.' })
+    }
+    res.json({ message: 'The user is no longer admin.' })
+  } else {
+    res.status(404)
+    throw new Error('User not found')
+  }
+})
+
+export { userLogin, registerUser, getAllUsers, deleteUser, updateUser }

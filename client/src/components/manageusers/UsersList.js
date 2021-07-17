@@ -2,7 +2,7 @@ import React from 'react'
 import { ListGroup } from 'react-bootstrap'
 import UserListItem from './UserListItem'
 
-function UsersList({ usersList, handleDeleteUser }) {
+function UsersList({ usersList, handleDeleteUser, handleUserEdit }) {
   return (
     <ListGroup>
       <ListGroup.Item variant='success'>Users List</ListGroup.Item>
@@ -13,6 +13,7 @@ function UsersList({ usersList, handleDeleteUser }) {
               key={user.email}
               user={user}
               handleDeleteUser={handleDeleteUser}
+              handleUserEdit={handleUserEdit}
             ></UserListItem>
           )
         })}
