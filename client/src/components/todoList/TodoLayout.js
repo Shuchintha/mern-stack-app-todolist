@@ -47,22 +47,31 @@ function TodoLayout() {
     setinputTodo('')
   }
 
-  const handleClick = async id => {
+  const handleDeleteTodo = async id => {
     await axios
       .delete(`http://localhost:5000/api/todos/delete/${id}`, config())
       .then(response => response.data)
       .then(data => console.log(data.message))
     getAllTodos()
   }
-
+  const handleTodoDone = async id => {
+    await axios
+      .put(`http://localhost:5000/api/todos/tododoneupdate`, { id }, config())
+      .then(response => response.data)
+      .then(data => console.log(data.message))
+    getAllTodos()
+  }
   return (
     <div>
       <h1>Todo list:</h1>
       {todoList
         ? todoList.map(todo => (
             <div key={todo._id}>
-              {todo.title}
-              <button onClick={() => handleClick(todo._id)}>X</button>
+              {todo.title} {todo.isDone ? 'true' : 'false'}
+              <button onClick={() => handleDeleteTodo(todo._id)}>X</button>
+              <button onClick={() => handleTodoDone(todo._id)}>
+                {todo.isDone ? 'Mark Undo' : 'Mark Done'}
+              </button>
             </div>
           ))
         : ''}

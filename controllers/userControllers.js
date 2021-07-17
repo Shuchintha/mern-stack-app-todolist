@@ -34,7 +34,6 @@ const userLogin = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password } = req.body
   const name = firstName + ' ' + lastName
-  console.log('body.', req.body)
   const userExists = await User.findOne({ email })
   if (userExists) {
     res.status(400)
@@ -91,7 +90,6 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.body.id)
-  console.log('update user', req.body)
 
   if (user) {
     user.isAdmin = !user.isAdmin
@@ -109,7 +107,6 @@ const updateUser = asyncHandler(async (req, res) => {
 const createUser = asyncHandler(async (req, res) => {
   const { firstName, lastName, email } = req.body
   const name = firstName + ' ' + lastName
-  console.log('body.', req.body)
   const userExists = await User.findOne({ email })
   if (userExists) {
     res.status(400)
