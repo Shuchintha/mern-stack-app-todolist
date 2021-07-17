@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const todoSchema = new mongoose.Schema({
-  userId: Number,
+  userId: String,
   title: String,
   completed: Boolean,
 })

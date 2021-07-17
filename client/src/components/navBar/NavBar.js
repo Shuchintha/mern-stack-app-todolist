@@ -28,17 +28,10 @@ function NavBar() {
   return (
     <div>
       <Navbar bg='light'>
-        <LinkContainer to='/'>
-          <Navbar.Brand variant='primary'>Mern</Navbar.Brand>
-        </LinkContainer>
         <Nav className='mr-auto'>
-          {user ? (
-            <LinkContainer to='/todolists'>
-              <Nav.Link>protected Todolist</Nav.Link>
-            </LinkContainer>
-          ) : (
-            ''
-          )}
+          <LinkContainer to='/'>
+            <Navbar.Brand variant='primary'>Mern</Navbar.Brand>
+          </LinkContainer>
         </Nav>
 
         {user ? (

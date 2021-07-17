@@ -42,7 +42,7 @@ function AdminCreateNewUser({ getUsersList }) {
     createUser(firstName, lastName, email)
   }
   return (
-    <Container className='border border-dark'>
+    <Container className='border border-dark p-3 m-1'>
       <h2 className='text-center'>Create a new User.</h2>
       <Form>
         <Row className='justify-content-md-center'>
@@ -77,7 +77,7 @@ function AdminCreateNewUser({ getUsersList }) {
           </Col>
         </Row>
 
-        <Row className='justify-content-md-center'>
+        <Row className='justify-content-center'>
           <SubmitButton onClickSubmit={handleSubmitAddUser} text='Add User' />
         </Row>
       </Form>

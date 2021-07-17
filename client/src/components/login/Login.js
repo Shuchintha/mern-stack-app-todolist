@@ -55,7 +55,7 @@ function Login() {
             />
           </Col>
         </Row>
-        <Row className='justify-content-md-center'>
+        <Row className='justify-content-center'>
           <SubmitButton onClickSubmit={handleSubmitLogin} text='Login' />
         </Row>
       </Form>

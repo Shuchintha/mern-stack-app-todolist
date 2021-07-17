@@ -19,8 +19,8 @@ function App() {
         <Route path='/login'>
           <Login />
         </Route>
-        <PrivateRoute path='/todolists' component={TodoLayout}></PrivateRoute>
         <PrivateRoute path='/manageuser' component={ManageUsers}></PrivateRoute>
+        <Route path='/' exact component={TodoLayout}></Route>
       </Container>
     </Router>
   )

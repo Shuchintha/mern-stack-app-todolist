@@ -8,7 +8,11 @@ function TodoLayout() {
   const [todoList, settodoList] = useState([])
   const [inputTodo, setinputTodo] = useState('')
   const userInfo = useSelector(state => state.userLogin.userInfo)
-
+  const config = () => ({
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    },
+  })
   useEffect(() => {
     console.log('object')
     if (!userInfo) {
@@ -16,7 +20,7 @@ function TodoLayout() {
     } else {
       const getTodos = async () => {
         await axios
-          .get('http://localhost:5000/api')
+          .get('http://localhost:5000/api/todos', config())
           .then(response => response.data)
           .then(json => settodoList(prevState => json))
       }

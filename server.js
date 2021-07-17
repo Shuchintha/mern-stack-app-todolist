@@ -1,8 +1,9 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import { Todo } from './models/todo.js'
+import { Todo } from './models/todoModal.js'
 import userRoutes from './routes/userRoutes.js'
+import todoRoutes from './routes/todoRoutes.js'
 import connectDB from './config/db.js'
 
 const app = express()
@@ -51,32 +52,6 @@ app.use(express.json())
 // Different routes
 // =========================Different routes===========================================
 app.use('/api/users', userRoutes)
-
-app.get('/api', async (req, res) => {
-  let todoList
-  await Todo.find(function (err, todo) {
-    if (err) return console.error(err)
-    todoList = todo
-  })
-  res.json(todoList)
-})
-
-app.post('/api/todoinput', async (req, res) => {
-  const todo = new Todo(req.body)
-  let newTodo
-  await todo.save(function (err, todo) {
-    if (err) return console.error(err)
-    res.send(todo)
-  })
-})
-
-app.delete('/api/tododelete/:id', async (req, res) => {
-  console.log('req.params', req.params)
-  await Todo.deleteOne({ _id: req.params.id }, function (err) {
-    if (err) return handleError(err)
-    // deleted at most one todo document
-  })
-  res.send('Todo has been deleted.')
-})
+app.use('/api/todos', todoRoutes)
 
 app.listen(port, () => console.log(`Listening on port ${port}...`))

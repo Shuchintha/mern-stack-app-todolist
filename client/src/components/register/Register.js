@@ -105,7 +105,7 @@ function Register() {
         </Row>
         {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
 
-        <Row className='justify-content-md-center'>
+        <Row className='justify-content-center'>
           <SubmitButton onClickSubmit={handleSubmitSignUp} text='Sign Up' />
         </Row>
       </Form>

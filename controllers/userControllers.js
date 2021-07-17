@@ -71,7 +71,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
     res.json(usersList)
   } else {
     res.status(401)
-    throw new Error('Invalid email or password.')
+    throw new Error('Could not find users.')
   }
 })
 
