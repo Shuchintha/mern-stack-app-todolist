@@ -13,26 +13,38 @@ function ManageUsers() {
     },
   })
 
-  const deleteUser = async (userInfo, id) => {
+  const deleteUser = async id => {
     return await axios
       .delete(`http://localhost:5000/api/users/delete/${id}`, config())
       .then(res => res.data)
       .then(data => console.log('This is the message', data))
   }
 
-  const getUsersList = async userInfo => {
+  const getUsersList = async () => {
     return await axios
       .get('http://localhost:5000/api/users/allusers', config())
       .then(res => res.data)
       .then(data => setusersList(data))
   }
 
-  const handleDeleteUser = async (e, id) => {
-    deleteUser(userInfo, id).then(() => getUsersList(userInfo))
+  const updateUser = async id => {
+    console.log('config:', JSON.stringify(config()))
+    return await axios
+      .put(`http://localhost:5000/api/users/update`, { id: id }, config())
+      .then(res => res.data)
+      .then(data => console.log('This is the message', data))
   }
 
+  const handleDeleteUser = async id => {
+    await deleteUser(id).then(() => getUsersList())
+  }
+
+  const handleUserEdit = async id => {
+    console.log('sfffsdfsfdsffsfs', id, '  token ', userInfo.token)
+    await updateUser(id).then(() => getUsersList())
+  }
   useEffect(() => {
-    getUsersList(userInfo)
+    getUsersList()
   }, [])
 
   return (
@@ -40,6 +52,7 @@ function ManageUsers() {
       <UsersList
         usersList={usersList}
         handleDeleteUser={handleDeleteUser}
+        handleUserEdit={handleUserEdit}
       ></UsersList>
       {/* <UsersList usersList={usersList}></UsersList> */}
     </div>
