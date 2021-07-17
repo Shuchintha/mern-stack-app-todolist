@@ -6,7 +6,7 @@ function PrivateRoute({ component: Component, ...rest }) {
   const userInfo = useSelector(state => state.userLogin.userInfo)
   return (
     <Route {...rest}>
-      {userInfo.isAdmin ? <Component /> : <Redirect to='/' />}
+      {userInfo?.isAdmin ? <Component /> : <Redirect to='/' />}
     </Route>
   )
 }

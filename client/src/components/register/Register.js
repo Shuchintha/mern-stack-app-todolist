@@ -49,6 +49,7 @@ function Register() {
 
   return (
     <Container>
+      <h2 className='text-center mb-4'>Register User</h2>
       <Form>
         <Row className='justify-content-md-center'>
           <Col sm lg='3'>

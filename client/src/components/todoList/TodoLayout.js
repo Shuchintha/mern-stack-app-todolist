@@ -7,6 +7,7 @@ function TodoLayout() {
   const history = useHistory()
   const [todoList, settodoList] = useState([])
   const [inputTodo, setinputTodo] = useState('')
+  const [inputBodyTodo, setinputBodyTodo] = useState('')
   const userInfo = useSelector(state => state.userLogin.userInfo)
   const config = () => ({
     headers: {
@@ -31,12 +32,15 @@ function TodoLayout() {
   const handleInputChange = event => {
     setinputTodo(event.target.value)
   }
+  const handleInputBodyChange = event => {
+    setinputBodyTodo(event.target.value)
+  }
 
   const handleTodoInputTodo = async event => {
     event.preventDefault()
     const todo = {
       title: inputTodo,
-      body: inputTodo,
+      body: inputBodyTodo,
     }
     await axios
       .post('http://localhost:5000/api/todos/todoinput', todo, config())
@@ -45,6 +49,7 @@ function TodoLayout() {
       .then(todo => console.log(todo.message))
     getAllTodos()
     setinputTodo('')
+    setinputBodyTodo('')
   }
 
   const handleDeleteTodo = async id => {
@@ -64,6 +69,18 @@ function TodoLayout() {
   return (
     <div>
       <h1>Todo list:</h1>
+
+      <form onSubmit={handleTodoInputTodo}>
+        <label htmlFor='Todo inputTodo'>Title :</label>
+        <input type='text' value={inputTodo} onChange={handleInputChange} />
+        <label htmlFor='Todo inputTodo'>Body :</label>
+        <input
+          type='text'
+          value={inputBodyTodo}
+          onChange={handleInputBodyChange}
+        />
+        <input type='submit' value='Submit' />
+      </form>
       {todoList
         ? todoList.map(todo => (
             <div key={todo._id}>
@@ -75,11 +92,6 @@ function TodoLayout() {
             </div>
           ))
         : ''}
-      <form onSubmit={handleTodoInputTodo}>
-        <label htmlFor='Todo inputTodo'>Todo :</label>
-        <input type='text' value={inputTodo} onChange={handleInputChange} />
-        <input type='submit' value='Submit' />
-      </form>
     </div>
   )
 }

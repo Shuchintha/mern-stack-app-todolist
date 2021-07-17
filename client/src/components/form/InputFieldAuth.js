@@ -3,7 +3,7 @@ import { Form } from 'react-bootstrap'
 
 function InputFieldAuth({ controlId, label, type, placeholder, handleChange }) {
   return (
-    <Form.Group controlId={controlId}>
+    <Form.Group controlId={controlId} className='mb-2'>
       <Form.Label>{label}</Form.Label>
       <Form.Control
         onChange={e => handleChange(e)}
