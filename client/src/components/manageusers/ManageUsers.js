@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import { Col, Row } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
 import AdminCreateNewUser from './AdminCreateNewUser'
 import UsersList from './UsersList'
@@ -29,7 +30,6 @@ function ManageUsers() {
   }
 
   const updateUser = async id => {
-    console.log('config:', JSON.stringify(config()))
     return await axios
       .put(`http://localhost:5000/api/users/update`, { id: id }, config())
       .then(res => res.data)
@@ -43,19 +43,24 @@ function ManageUsers() {
   const handleUserEdit = async id => {
     await updateUser(id).then(() => getUsersList())
   }
+
   useEffect(() => {
     getUsersList()
   }, [])
 
   return (
-    <div>
-      <AdminCreateNewUser></AdminCreateNewUser>
-      <UsersList
-        usersList={usersList}
-        handleDeleteUser={handleDeleteUser}
-        handleUserEdit={handleUserEdit}
-      ></UsersList>
-    </div>
+    <>
+      <Col>
+        <Row style={{ marginBottom: '10px' }}>
+          <AdminCreateNewUser getUsersList={getUsersList}></AdminCreateNewUser>
+        </Row>
+        <UsersList
+          usersList={usersList}
+          handleDeleteUser={handleDeleteUser}
+          handleUserEdit={handleUserEdit}
+        ></UsersList>
+      </Col>
+    </>
   )
 }
 

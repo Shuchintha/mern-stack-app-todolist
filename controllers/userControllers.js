@@ -106,4 +106,35 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 })
 
-export { userLogin, registerUser, getAllUsers, deleteUser, updateUser }
+const createUser = asyncHandler(async (req, res) => {
+  const { firstName, lastName, email } = req.body
+  const name = firstName + ' ' + lastName
+  console.log('body.', req.body)
+  const userExists = await User.findOne({ email })
+  if (userExists) {
+    res.status(400)
+    throw new Error('User already exists.')
+  }
+  const password = process.env.ADMIN_CREATED_USER_PASSORD
+  const user = await User.create({
+    name,
+    email,
+    password,
+  })
+
+  if (user) {
+    res.json({ message: 'The new user was created by the admin.' })
+  } else {
+    res.status(400)
+    throw new Error('Invalid user data')
+  }
+})
+
+export {
+  userLogin,
+  registerUser,
+  getAllUsers,
+  deleteUser,
+  updateUser,
+  createUser,
+}
