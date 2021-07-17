@@ -1,11 +1,24 @@
 import React from 'react'
-import { ListGroup } from 'react-bootstrap'
+import { Button, ListGroup } from 'react-bootstrap'
 
-function UserListItem({ userEmail, variant }) {
+function UserListItem({ user, handleDeleteUser }) {
   return (
-    <ListGroup.Item action variant={variant}>
-      {userEmail}
-    </ListGroup.Item>
+    <>
+      <ListGroup.Item
+        action
+        className=' d-flex justify-content-between align-items-center'
+        variant='light'
+      >
+        {user.email}
+        {user.isAdmin && ` (Admin)`}
+        <div>
+          <Button variant='danger' onClick={e => handleDeleteUser(e, user._id)}>
+            Delete
+          </Button>{' '}
+          <Button variant='dark'>Edit</Button>
+        </div>
+      </ListGroup.Item>
+    </>
   )
 }
 

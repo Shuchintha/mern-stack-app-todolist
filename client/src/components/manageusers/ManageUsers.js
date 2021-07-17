@@ -1,50 +1,49 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import UsersList from './UsersList'
-import { Accordion } from 'react-bootstrap'
-
-const getUsersList = async () => {
-  return await axios
-    .get('http://localhost:5000/api/users/allusers')
-    .then(res => res.data)
-}
 
 function ManageUsers() {
-  const [usersList, setusersLsit] = useState(null)
+  const [usersList, setusersList] = useState(null)
+  const userInfo = useSelector(state => state.userLogin.userInfo)
+
+  const config = () => ({
+    headers: {
+      Authorization: `Bearer ${userInfo.token}`,
+    },
+  })
+
+  const deleteUser = async (userInfo, id) => {
+    return await axios
+      .delete(`http://localhost:5000/api/users/delete/${id}`, config())
+      .then(res => res.data)
+      .then(data => console.log('This is the message', data))
+  }
+
+  const getUsersList = async userInfo => {
+    return await axios
+      .get('http://localhost:5000/api/users/allusers', config())
+      .then(res => res.data)
+      .then(data => setusersList(data))
+  }
+
+  const handleDeleteUser = async (e, id) => {
+    deleteUser(userInfo, id).then(() => getUsersList(userInfo))
+  }
 
   useEffect(() => {
-    getUsersList().then(json => setusersLsit(json))
-
-    console.log('usersLsit', JSON.stringify(usersList))
+    getUsersList(userInfo)
   }, [])
 
   return (
     <div>
-      <Accordion defaultActiveKey='0' flush>
-        <Accordion.Item eventKey='0'>
-          <Accordion.Header>'Create User'</Accordion.Header>
-          <Accordion.Body>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </Accordion.Body>
-        </Accordion.Item>
-        {/* <Accordion.Item eventKey='1'>
-          <Accordion.Header>UsersList</Accordion.Header>
-          <Accordion.Body>
-            hello
-          </Accordion.Body>
-        </Accordion.Item> */}
-      </Accordion>
+      <UsersList
+        usersList={usersList}
+        handleDeleteUser={handleDeleteUser}
+      ></UsersList>
+      {/* <UsersList usersList={usersList}></UsersList> */}
     </div>
   )
 }
 
 export default ManageUsers
-{
-  /* <UsersList usersList={usersList}></UsersList> */
-}

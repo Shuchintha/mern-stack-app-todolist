@@ -1,9 +1,9 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import mongoose from 'mongoose'
 import { Todo } from './models/todo.js'
 import userRoutes from './routes/userRoutes.js'
+import connectDB from './config/db.js'
 
 const app = express()
 
@@ -11,9 +11,8 @@ const app = express()
 // dotenv.config() will load the env variables from .env file to the application
 // =========================dotenv.config()===========================================
 dotenv.config()
-const dbURI = process.env.ATLAS_URI
 const port = process.env.PORT || 5000
-
+connectDB()
 // =========================cors()===========================================
 // Calling use(cors()) will enable the express server to respond to preflight requests.
 // A preflight request is basically an OPTION request sent to the server before the actual request is sent, in order to ask which origin and which request options the server accepts.
@@ -36,10 +35,6 @@ app.use(cors())
 // express.json() is a method inbuilt in express to recognize the incoming Request Object as a JSON Object.
 // =========================express.json()===========================================
 app.use(express.json())
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-mongoose.connection.once('open', function () {
-  console.log('Successfully connected to the mongoDB database.')
-})
 
 // app.use((req, res, next) => {
 //   console.log('object')

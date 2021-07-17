@@ -1,17 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form, Container, Row, Col, Alert } from 'react-bootstrap'
 import InputFieldAuth from '../form/InputFieldAuth'
 import SubmitButton from '../form/SubmitButton'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { register } from '../../store/actions/userActions'
+import { useHistory } from 'react-router'
 
 function Register() {
+  const history = useHistory()
   const [email, setemail] = useState('')
   const [password, setpassword] = useState('')
   const [firstName, setfirstName] = useState('')
   const [lastName, setlastName] = useState('')
   const [confirmPassword, setconfirmPassword] = useState('')
   const [errorMessage, seterrorMessage] = useState(null)
+  const userInfo = useSelector(state => state.userLogin.userInfo)
+
   const dispatch = useDispatch()
 
   const handleEmailInput = e => {
@@ -37,6 +41,11 @@ function Register() {
       register(firstName, lastName, email, password)(dispatch)
     }
   }
+  useEffect(() => {
+    if (userInfo) {
+      history.push('/')
+    }
+  }, [userInfo, history])
 
   return (
     <Container>
