@@ -1,7 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
-import { Todo } from './models/todoModal.js'
 import userRoutes from './routes/userRoutes.js'
 import todoRoutes from './routes/todoRoutes.js'
 import connectDB from './config/db.js'

@@ -13,19 +13,18 @@ function TodoLayout() {
       Authorization: `Bearer ${userInfo.token}`,
     },
   })
+  const getAllTodos = async () => {
+    await axios
+      .get('http://localhost:5000/api/todos', config())
+      .then(response => response.data)
+      .then(json => settodoList(prevState => json.todos))
+  }
   useEffect(() => {
     console.log('object')
     if (!userInfo) {
       history.push('/login')
     } else {
-      const getTodos = async () => {
-        await axios
-          .get('http://localhost:5000/api/todos', config())
-          .then(response => response.data)
-          .then(json => settodoList(prevState => json))
-      }
-
-      getTodos()
+      getAllTodos()
     }
   }, [history, userInfo])
 
@@ -36,27 +35,24 @@ function TodoLayout() {
   const handleTodoInputTodo = async event => {
     event.preventDefault()
     const todo = {
-      userId: 1,
       title: inputTodo,
-      completed: false,
+      body: inputTodo,
     }
-    await axios.post('http://localhost:5000/api/todoinput', todo).then(todo => {
-      settodoList(prevState => {
-        return [...prevState, todo.data]
-      })
-    })
+    await axios
+      .post('http://localhost:5000/api/todos/todoinput', todo, config())
+      .then(response => response.data)
+
+      .then(todo => console.log(todo.message))
+    getAllTodos()
     setinputTodo('')
   }
 
   const handleClick = async id => {
-    console.log(id)
     await axios
-      .delete(`http://localhost:5000/api/tododelete/${id}`)
-      .then(res => {
-        settodoList(prevState => {
-          return prevState.filter(todo => todo._id !== id)
-        })
-      })
+      .delete(`http://localhost:5000/api/todos/delete/${id}`, config())
+      .then(response => response.data)
+      .then(data => console.log(data.message))
+    getAllTodos()
   }
 
   return (

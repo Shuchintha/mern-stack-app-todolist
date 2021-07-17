@@ -1,9 +1,20 @@
 import mongoose from 'mongoose'
 
-const todoSchema = new mongoose.Schema({
-  userId: String,
+const Todos = new mongoose.Schema({
   title: String,
-  completed: Boolean,
+  body: String,
+  isDone: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-export const Todo = mongoose.model('Todo', todoSchema)
+const TodoSchema = new mongoose.Schema({
+  userId: String,
+  todos: {
+    type: [Todos],
+    default: undefined,
+  },
+})
+
+export const Todo = mongoose.model('Todo', TodoSchema)
