@@ -64,4 +64,24 @@ const updateTodoDone = asyncHandler(async (req, res) => {
   }
 })
 
-export { getAllTodos, postTodoItem, deleteTodoItem, updateTodoDone }
+const updateTodoItem = asyncHandler(async (req, res) => {
+  const todo = await Todo.findOne({ userId: req.user._id })
+  const todoUpdate = todo.todos.id(req.params.id)
+  if (todoUpdate) {
+    todoUpdate.title = req.body.title
+    todoUpdate.body = req.body.body
+    todo.save()
+    return res.json({ message: 'The todo item has been updated.' })
+  } else {
+    res.status(404)
+    throw new Error('Todo not found')
+  }
+})
+
+export {
+  getAllTodos,
+  postTodoItem,
+  deleteTodoItem,
+  updateTodoDone,
+  updateTodoItem,
+}

@@ -46,7 +46,7 @@ function ManageUsers() {
 
   useEffect(() => {
     getUsersList()
-  }, [])
+  }, [usersList])
 
   return (
     <>
