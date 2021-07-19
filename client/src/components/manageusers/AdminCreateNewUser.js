@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
-import { Form, Container, Row, Col, Alert } from 'react-bootstrap'
+import { Form, Container, Row, Col } from 'react-bootstrap'
 import InputFieldAuth from '../form/InputFieldAuth'
 import SubmitButton from '../form/SubmitButton'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
+import Message from '../form/Message'
+import Loader from '../form/Loader'
 
-function AdminCreateNewUser({ getUsersList }) {
+function AdminCreateNewUser({ getUsersList, usersList }) {
   const [email, setemail] = useState('')
   const [firstName, setfirstName] = useState('')
   const [lastName, setlastName] = useState('')
+  const [message, setmessage] = useState('')
   const userInfo = useSelector(state => state.userLogin.userInfo)
 
   const config = () => ({
@@ -17,7 +20,6 @@ function AdminCreateNewUser({ getUsersList }) {
     },
   })
   const createUser = async (firstName, lastName, email) => {
-    console.log('config:', JSON.stringify(config()))
     return await axios
       .post(
         'http://localhost:5000/api/users/createuser',
@@ -39,11 +41,19 @@ function AdminCreateNewUser({ getUsersList }) {
   }
   const handleSubmitAddUser = e => {
     e.preventDefault()
-    createUser(firstName, lastName, email)
+    if (!firstName || !lastName) {
+      setmessage('First name and Last name is required.')
+    } else if (!email) {
+      setmessage('Email is invalid.')
+    } else if (usersList.some(user => user.email === email)) {
+      setmessage('User already exists.')
+    } else {
+      createUser(firstName, lastName, email)
+    }
   }
   return (
-    <Container className='border border-dark p-3 m-1'>
-      <h2 className='text-center'>Create a new User.</h2>
+    <Container className='border rounded border-light p-3 mb-1'>
+      {message && <Message variant='danger'>{message}</Message>}
       <Form>
         <Row className='justify-content-md-center'>
           <Col sm lg='3'>

@@ -17,7 +17,7 @@ const userLogin = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email })
 
-  if (user && password) {
+  if (user && user.password === password) {
     res.json({
       _id: user._id,
       name: user.name,
@@ -60,11 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
 })
 
 const getAllUsers = asyncHandler(async (req, res) => {
-  let usersList
-  await User.find(function (err, users) {
-    if (err) return console.error(err)
-    usersList = users
-  })
+  let usersList = await User.find()
 
   if (usersList) {
     res.json(usersList)

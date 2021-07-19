@@ -1,14 +1,15 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
-import { Col, Row } from 'react-bootstrap'
+import { Col, Container, Row } from 'react-bootstrap'
 import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router'
 import AdminCreateNewUser from './AdminCreateNewUser'
 import UsersList from './UsersList'
 
 function ManageUsers() {
   const [usersList, setusersList] = useState(null)
   const userInfo = useSelector(state => state.userLogin.userInfo)
-
+  const history = useHistory()
   const config = () => ({
     headers: {
       Authorization: `Bearer ${userInfo.token}`,
@@ -23,6 +24,7 @@ function ManageUsers() {
   }
 
   const getUsersList = async () => {
+    console.log('userInfo getuserlist', userInfo)
     return await axios
       .get('http://localhost:5000/api/users/allusers', config())
       .then(res => res.data)
@@ -45,22 +47,36 @@ function ManageUsers() {
   }
 
   useEffect(() => {
+    if (!userInfo?.isAdmin) {
+      history.push('/')
+    }
     getUsersList()
-  }, [usersList])
+  }, [])
 
   return (
-    <>
-      <Col>
-        <Row style={{ marginBottom: '10px' }}>
-          <AdminCreateNewUser getUsersList={getUsersList}></AdminCreateNewUser>
-        </Row>
-        <UsersList
-          usersList={usersList}
-          handleDeleteUser={handleDeleteUser}
-          handleUserEdit={handleUserEdit}
-        ></UsersList>
-      </Col>
-    </>
+    <Container>
+      <Row style={{ marginBottom: '1rem', marginTop: '-1rem' }}>
+        <Col>
+          <h2 className='text-center'>Create a new User.</h2>
+
+          <AdminCreateNewUser
+            usersList={usersList}
+            getUsersList={getUsersList}
+          ></AdminCreateNewUser>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <h2 className='text-center'>User Details:</h2>
+
+          <UsersList
+            usersList={usersList}
+            handleDeleteUser={handleDeleteUser}
+            handleUserEdit={handleUserEdit}
+          ></UsersList>
+        </Col>
+      </Row>
+    </Container>
   )
 }
 

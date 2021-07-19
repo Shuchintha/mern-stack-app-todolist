@@ -1,8 +1,8 @@
 import React from 'react'
-import { Button, Col, ListGroup, Row } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 import ConfirmModal from '../modal/ConfirmModal'
 
-function UserListItem({ user, handleDeleteUser, handleUserEdit }) {
+function UserListItem({ index, user, handleDeleteUser, handleUserEdit }) {
   const [confirmModalShow, setconfirmModalShow] = React.useState(false)
   const [userEditModalShow, setuserEditModalShow] = React.useState(false)
   const confirmModalText = {
@@ -32,31 +32,32 @@ function UserListItem({ user, handleDeleteUser, handleUserEdit }) {
 
   return (
     <>
-      <Row>
-        <Col sm={10}>
-          <ListGroup.Item
-            action
-            className=' d-flex justify-content-between align-items-center'
-            variant='light'
+      <tr>
+        <td className='align-baseline col-1'>{index}</td>
+        <td className='align-baseline col-4'>{user.email}</td>
+        <td className='align-baseline col-3'>{user.name}</td>
+        <td className='align-baseline col-2'>
+          <Button
+            variant='danger'
+            className='btn-sm'
+            onClick={() => setconfirmModalShow(true)}
           >
-            {user.email}
-            {user.isAdmin && ` (Admin)`}
-          </ListGroup.Item>
-        </Col>
-        <Col
-          className=' d-flex justify-content-between align-items-center'
-          sm={2}
-        >
-          <Button variant='danger' onClick={() => setconfirmModalShow(true)}>
             Delete
-          </Button>{' '}
-          <Button variant='dark' onClick={() => setuserEditModalShow(true)}>
+          </Button>
+        </td>
+        <td className='align-baseline col-2'>
+          {' '}
+          <Button
+            variant='dark'
+            className='btn-sm'
+            onClick={() => setuserEditModalShow(true)}
+          >
             {user.isAdmin ? 'Admin' : 'User'}
           </Button>
-        </Col>
-      </Row>
+        </td>
+      </tr>
 
-      <div>
+      <>
         <ConfirmModal
           show={confirmModalShow}
           onHide={() => setconfirmModalShow(false)}
@@ -71,7 +72,7 @@ function UserListItem({ user, handleDeleteUser, handleUserEdit }) {
           }
           handleClick={handleAddAdmin}
         />
-      </div>
+      </>
     </>
   )
 }

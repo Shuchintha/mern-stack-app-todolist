@@ -26,24 +26,26 @@ function NavBar() {
   }
 
   return (
-    <div>
-      <Navbar bg='light'>
+    <>
+      <Navbar sticky='top' bg='light'>
         <Nav className='mr-auto'>
           <LinkContainer to='/'>
-            <Navbar.Brand variant='primary'>Mern</Navbar.Brand>
+            <Navbar.Brand variant='primary'>TodoApp</Navbar.Brand>
           </LinkContainer>
         </Nav>
 
         {user ? (
           <Nav>
-            <NavDropdown title={`Hi! ${user.name}`}>
+            {user?.isAdmin && (
+              <LinkContainer to='/manageuser'>
+                <Nav.Link>Manage Users</Nav.Link>
+              </LinkContainer>
+            )}
+            <NavDropdown
+              title={` ${user?.isAdmin ? 'Admin' : 'Hi!'} ${user.name}`}
+            >
               <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
               <NavDropdown.Divider />
-              {user.isAdmin && (
-                <LinkContainer to='/manageuser'>
-                  <NavDropdown.Item>Manage Users</NavDropdown.Item>
-                </LinkContainer>
-              )}
             </NavDropdown>
           </Nav>
         ) : (
@@ -57,7 +59,7 @@ function NavBar() {
           </Nav>
         )}
       </Navbar>
-    </div>
+    </>
   )
 }
 

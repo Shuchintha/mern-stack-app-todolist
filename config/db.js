@@ -10,10 +10,11 @@ const connectDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    mongoose.connection.once('open', function () {
-      console.log('Successfully connected to the mongoDB database.')
-    })
-    console.log('SFDSF ' + conn.connection.host)
+    mongoose.connection
+      .on('error', console.error.bind(console, 'connection error:'))
+      .once('open', function () {
+        console.log('Successfully connected to the mongoDB database.')
+      })
   } catch (error) {
     console.log(error.message)
     process.exit(1)

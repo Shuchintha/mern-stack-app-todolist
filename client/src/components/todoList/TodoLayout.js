@@ -48,6 +48,9 @@ function TodoLayout() {
 
   const handleTodoInputTodo = async event => {
     event.preventDefault()
+    if (!inputTodo || !inputTodo) {
+      return alert('First name and Last name is required.')
+    }
     const todo = {
       title: inputTodo,
       body: inputBodyTodo,
@@ -100,16 +103,12 @@ function TodoLayout() {
           className='d-flex justify-content-center '
           style={{ height: '18rem' }}
         >
-          <div
-            className='d-block  w-100 text-center'
-            style={{ height: '0.5rem' }}
+          <Col
+            className='text-center '
+            sm={8}
+            style={{ marginBottom: '.5rem' }}
           >
-            <h1>Todo list:</h1>
-          </div>
-          <div
-            className='d-block h-50 w-50 text-center '
-            style={{ bottom: '1rem' }}
-          >
+            <h2>Create Todo:</h2>
             <CreateTodoForm
               inputTodo={inputTodo}
               handleInputChange={handleInputChange}
@@ -117,7 +116,7 @@ function TodoLayout() {
               inputBodyTodo={inputBodyTodo}
               handleInputBodyChange={handleInputBodyChange}
             />
-          </div>
+          </Col>
         </Row>
         <Row className='d-flex justify-content-center '>
           <Col className='text-left'>

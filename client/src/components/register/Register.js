@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Container, Row, Col, Alert } from 'react-bootstrap'
+import { Form, Container, Row, Col } from 'react-bootstrap'
 import InputFieldAuth from '../form/InputFieldAuth'
 import SubmitButton from '../form/SubmitButton'
 import { useDispatch, useSelector } from 'react-redux'
 import { register } from '../../store/actions/userActions'
-import { useHistory } from 'react-router'
-
+import { Link, useHistory } from 'react-router-dom'
+import Message from '../form/Message'
+import Loader from '../form/Loader'
 function Register() {
   const history = useHistory()
   const [email, setemail] = useState('')
@@ -13,8 +14,10 @@ function Register() {
   const [firstName, setfirstName] = useState('')
   const [lastName, setlastName] = useState('')
   const [confirmPassword, setconfirmPassword] = useState('')
-  const [errorMessage, seterrorMessage] = useState(null)
-  const userInfo = useSelector(state => state.userLogin.userInfo)
+  const [message, setMessage] = useState(null)
+
+  const userRegister = useSelector(state => state.userRegister)
+  const { loading, error, userInfo } = userRegister
 
   const dispatch = useDispatch()
 
@@ -35,8 +38,12 @@ function Register() {
   }
   const handleSubmitSignUp = e => {
     e.preventDefault()
-    if (password !== confirmPassword) {
-      seterrorMessage('Password are not matching.')
+    if (!firstName || !lastName) {
+      setMessage('First name and Last name is required.')
+    } else if (!email) {
+      setMessage('Email Address is required.')
+    } else if (!password || !confirmPassword || password !== confirmPassword) {
+      setMessage('Password should be entered properly.')
     } else {
       register(firstName, lastName, email, password)(dispatch)
     }
@@ -50,6 +57,9 @@ function Register() {
   return (
     <Container>
       <h2 className='text-center mb-4'>Register User</h2>
+      {error && <Message variant='danger'>{error}</Message>}
+      {message && <Message variant='danger'>{message}</Message>}
+      {loading && <Loader />}
       <Form>
         <Row className='justify-content-md-center'>
           <Col sm lg='3'>
@@ -104,8 +114,9 @@ function Register() {
             />
           </Col>
         </Row>
-        {errorMessage && <Alert variant='danger'>{errorMessage}</Alert>}
-
+        <Row className='justify-content-center'>
+          Already registered? <Link to='/login'>Login</Link>
+        </Row>
         <Row className='justify-content-center'>
           <SubmitButton onClickSubmit={handleSubmitSignUp} text='Sign Up' />
         </Row>
