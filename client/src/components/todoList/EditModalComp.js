@@ -20,9 +20,7 @@ function EditModalComp({ todo, show, handleClose, getAllTodos, config }) {
         config()
       )
       .then(response => response.data)
-      .then(data => {
-        console.log(data.message)
-      })
+
     handleModalClose()
     getAllTodos()
   }

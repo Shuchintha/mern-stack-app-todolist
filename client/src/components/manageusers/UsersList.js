@@ -5,11 +5,11 @@ import UserListItem from './UserListItem'
 function UsersList({ usersList, handleDeleteUser, handleUserEdit }) {
   return (
     <Table
-      className='text-left align-baseline'
+      className='text-left align-baseline shadow p-3 mb-4 bg-white rounded'
       striped
       bordered
       hover
-      responsive='md'
+      responsive='sm'
     >
       <thead>
         <tr>

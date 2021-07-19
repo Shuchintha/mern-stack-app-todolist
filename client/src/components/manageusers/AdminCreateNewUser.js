@@ -5,7 +5,7 @@ import SubmitButton from '../form/SubmitButton'
 import { useSelector } from 'react-redux'
 import axios from 'axios'
 import Message from '../form/Message'
-import Loader from '../form/Loader'
+import validator from 'validator'
 
 function AdminCreateNewUser({ getUsersList, usersList }) {
   const [email, setemail] = useState('')
@@ -41,10 +41,13 @@ function AdminCreateNewUser({ getUsersList, usersList }) {
   }
   const handleSubmitAddUser = e => {
     e.preventDefault()
-    if (!firstName || !lastName) {
+    if (validator.isEmpty(firstName + '') || validator.isEmpty(lastName + '')) {
       setmessage('First name and Last name is required.')
-    } else if (!email) {
-      setmessage('Email is invalid.')
+    } else if (
+      validator.isEmpty(email + '') ||
+      !validator.isEmail(email + '')
+    ) {
+      setmessage('Please provide proper email address.')
     } else if (usersList.some(user => user.email === email)) {
       setmessage('User already exists.')
     } else {

@@ -7,6 +7,8 @@ import { register } from '../../store/actions/userActions'
 import { Link, useHistory } from 'react-router-dom'
 import Message from '../form/Message'
 import Loader from '../form/Loader'
+import validator from 'validator'
+
 function Register() {
   const history = useHistory()
   const [email, setemail] = useState('')
@@ -14,7 +16,7 @@ function Register() {
   const [firstName, setfirstName] = useState('')
   const [lastName, setlastName] = useState('')
   const [confirmPassword, setconfirmPassword] = useState('')
-  const [message, setMessage] = useState(null)
+  const [message, setmessage] = useState(null)
 
   const userRegister = useSelector(state => state.userRegister)
   const { loading, error, userInfo } = userRegister
@@ -38,12 +40,22 @@ function Register() {
   }
   const handleSubmitSignUp = e => {
     e.preventDefault()
-    if (!firstName || !lastName) {
-      setMessage('First name and Last name is required.')
-    } else if (!email) {
-      setMessage('Email Address is required.')
-    } else if (!password || !confirmPassword || password !== confirmPassword) {
-      setMessage('Password should be entered properly.')
+    if (validator.isEmpty(firstName + '') || validator.isEmpty(lastName + '')) {
+      setmessage('First name and Last name is required.')
+    } else if (
+      validator.isEmpty(email + '') ||
+      !validator.isEmail(email + '')
+    ) {
+      setmessage('Please provide proper email address.')
+    } else if (
+      validator.isEmpty(password + '') ||
+      validator.isEmpty(confirmPassword + '') ||
+      !validator.equals(password + '', confirmPassword + '') ||
+      !validator.isStrongPassword(password + '')
+    ) {
+      setmessage(
+        'Password should be minLength: 8, minLowercase: 1, minUppercase: 1, minNumbers: 1, minSymbols: 1.'
+      )
     } else {
       register(firstName, lastName, email, password)(dispatch)
     }

@@ -8,6 +8,7 @@ import InputFieldAuth from '../form/InputFieldAuth'
 import Loader from '../form/Loader'
 import Message from '../form/Message'
 import SubmitButton from '../form/SubmitButton'
+import validator from 'validator'
 
 function Login() {
   const history = useHistory()
@@ -26,9 +27,9 @@ function Login() {
   }
   const handleSubmitLogin = e => {
     e.preventDefault()
-    if (!email) {
-      setMessage('Email Address is required.')
-    } else if (!password) {
+    if (validator.isEmpty(email + '') || !validator.isEmail(email + '')) {
+      setMessage('Please provide proper email address.')
+    } else if (validator.isEmpty(password + '')) {
       setMessage('Password should be entered properly.')
     } else {
       login(email, password)(dispatch)
@@ -45,7 +46,6 @@ function Login() {
     <FormContainer>
       <h2 className='text-center m-5'>Login User</h2>
       {message && <Message variant='danger'>{message}</Message>}
-
       {error && <Message variant='danger'>{error}</Message>}
       {loading && <Loader />}
       <Form>

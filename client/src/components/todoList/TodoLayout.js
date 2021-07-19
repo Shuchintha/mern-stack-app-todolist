@@ -11,6 +11,8 @@ import CardViewComp from './CardViewComp'
 import ListViewComp from './ListViewComp'
 import CreateTodoForm from './CreateTodoForm'
 import EditModalComp from './EditModalComp'
+import Message from '../form/Message'
+import validator from 'validator'
 
 function TodoLayout() {
   const history = useHistory()
@@ -20,6 +22,7 @@ function TodoLayout() {
   const [toggleView, setToggleView] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editTodo, setEditTodo] = useState({})
+  const [message, setmessage] = useState('')
 
   const handleModalClose = () => setShowModal(false)
   const handleModalShow = () => setShowModal(pre => true)
@@ -48,9 +51,13 @@ function TodoLayout() {
 
   const handleTodoInputTodo = async event => {
     event.preventDefault()
-    if (!inputTodo || !inputTodo) {
-      return alert('First name and Last name is required.')
+    if (
+      validator.isEmpty(inputTodo + '') ||
+      validator.isEmpty(inputBodyTodo + '')
+    ) {
+      return setmessage('Title and the body of the task is required.')
     }
+
     const todo = {
       title: inputTodo,
       body: inputBodyTodo,
@@ -59,7 +66,6 @@ function TodoLayout() {
       .post('http://localhost:5000/api/todos/todoinput', todo, config())
       .then(response => response.data)
 
-      .then(todo => console.log(todo.message))
     getAllTodos()
     setinputTodo('')
     setinputBodyTodo('')
@@ -69,22 +75,18 @@ function TodoLayout() {
     await axios
       .delete(`http://localhost:5000/api/todos/delete/${id}`, config())
       .then(response => response.data)
-      .then(data => console.log(data.message))
     getAllTodos()
   }
 
   const handleEditTodo = todo => {
     setEditTodo(todo)
     handleModalShow()
-
-    console.log('todo', todo)
   }
 
   const handleTodoDone = async id => {
     await axios
       .put(`http://localhost:5000/api/todos/tododoneupdate`, { id }, config())
       .then(response => response.data)
-      .then(data => console.log(data.message))
     getAllTodos()
   }
 
@@ -94,21 +96,22 @@ function TodoLayout() {
     } else {
       getAllTodos()
     }
-  }, [history, userInfo])
+  }, [userInfo, history])
 
   return (
     <div>
       <Container style={{ width: '100%' }} fluid>
+        {message && <Message variant='danger'>{message}</Message>}
         <Row
           className='d-flex justify-content-center '
-          style={{ height: '18rem' }}
+          style={{ marginBottom: '4rem' }}
         >
           <Col
-            className='text-center '
+            className='text-center shadow p-3 rounded'
             sm={8}
             style={{ marginBottom: '.5rem' }}
           >
-            <h2>Create Todo:</h2>
+            <h2 className='shadow p-3 mb-3 bg-white rounded '>Create Todo:</h2>
             <CreateTodoForm
               inputTodo={inputTodo}
               handleInputChange={handleInputChange}
@@ -118,7 +121,7 @@ function TodoLayout() {
             />
           </Col>
         </Row>
-        <Row className='d-flex justify-content-center '>
+        <Row className='d-flex justify-content-center shadow p-3 mb-2 rounded'>
           <Col className='text-left'>
             <h3> All tasks</h3>
           </Col>
@@ -132,7 +135,7 @@ function TodoLayout() {
             </Button>
           </Col>
         </Row>
-        <Row>
+        <Row className='d-flex justify-content-center shadow p-3 rounded'>
           {Array.isArray(todoList) && todoList.length > 0
             ? todoList?.map(todo =>
                 toggleView ? (

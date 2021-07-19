@@ -20,11 +20,9 @@ function ManageUsers() {
     return await axios
       .delete(`http://localhost:5000/api/users/delete/${id}`, config())
       .then(res => res.data)
-      .then(data => console.log('This is the message', data))
   }
 
   const getUsersList = async () => {
-    console.log('userInfo getuserlist', userInfo)
     return await axios
       .get('http://localhost:5000/api/users/allusers', config())
       .then(res => res.data)
@@ -35,7 +33,6 @@ function ManageUsers() {
     return await axios
       .put(`http://localhost:5000/api/users/update`, { id: id }, config())
       .then(res => res.data)
-      .then(data => console.log('This is the message', data))
   }
 
   const handleDeleteUser = async id => {
@@ -51,13 +48,18 @@ function ManageUsers() {
       history.push('/')
     }
     getUsersList()
-  }, [])
+  }, [userInfo, history])
 
   return (
     <Container>
-      <Row style={{ marginBottom: '1rem', marginTop: '-1rem' }}>
-        <Col>
-          <h2 className='text-center'>Create a new User.</h2>
+      <Row
+        className='d-flex justify-content-center '
+        style={{ marginBottom: '1rem', marginTop: '-1rem' }}
+      >
+        <Col sm={8} className='shadow p-3 mb-4 bg-white rounded '>
+          <h2 className='text-center shadow p-3 mb-4 bg-white rounded'>
+            Create a new User.
+          </h2>
 
           <AdminCreateNewUser
             usersList={usersList}
@@ -66,8 +68,10 @@ function ManageUsers() {
         </Col>
       </Row>
       <Row>
-        <Col>
-          <h2 className='text-center'>User Details:</h2>
+        <Col className='text-center shadow p-3 mb-4 bg-white rounded'>
+          <h2 className='text-center shadow p-3 mb-4 bg-white rounded'>
+            User Details:
+          </h2>
 
           <UsersList
             usersList={usersList}
@@ -76,6 +80,20 @@ function ManageUsers() {
           ></UsersList>
         </Col>
       </Row>
+      {/* <Row>
+        <Col>
+          <Row className=' shadow p-3 mb-4 bg-white rounded'>
+            <h2 className='text-center'>User Details:</h2>
+          </Row>
+          <Row className=' shadow p-3 mb-4 bg-white rounded '>
+            <UsersList
+              usersList={usersList}
+              handleDeleteUser={handleDeleteUser}
+              handleUserEdit={handleUserEdit}
+            ></UsersList>
+          </Row>
+        </Col>
+      </Row> */}
     </Container>
   )
 }
