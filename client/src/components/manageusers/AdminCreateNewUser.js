@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import { Form, Container, Row, Col } from 'react-bootstrap'
 import InputFieldAuth from '../form/InputFieldAuth'
 import SubmitButton from '../form/SubmitButton'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import Message from '../form/Message'
 import validator from 'validator'
+import { openCreateUSer } from '../../store/actions/userActions'
 
 function AdminCreateNewUser({ getUsersList, usersList }) {
   const [email, setemail] = useState('')
@@ -13,7 +14,7 @@ function AdminCreateNewUser({ getUsersList, usersList }) {
   const [lastName, setlastName] = useState('')
   const [message, setmessage] = useState('')
   const userInfo = useSelector(state => state.userLogin.userInfo)
-
+  const dispatch = useDispatch()
   const config = () => ({
     headers: {
       Authorization: `Bearer ${userInfo.token}`,
@@ -52,6 +53,7 @@ function AdminCreateNewUser({ getUsersList, usersList }) {
       setmessage('User already exists.')
     } else {
       createUser(firstName, lastName, email)
+      openCreateUSer(dispatch)
     }
   }
   return (

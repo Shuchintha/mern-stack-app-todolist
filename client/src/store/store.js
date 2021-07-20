@@ -1,8 +1,13 @@
 import { combineReducers, createStore } from 'redux'
-import { userLoginReducer, userRegisterReducer } from './reducers/userReducers'
+import {
+  userLoginReducer,
+  userRegisterReducer,
+  uiUpdateReducer,
+} from './reducers/userReducers'
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
+  uiUpdate: uiUpdateReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

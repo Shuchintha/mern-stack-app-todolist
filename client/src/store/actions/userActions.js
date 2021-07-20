@@ -7,8 +7,12 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  IS_SHOW_USER_CREATE_FORM,
 } from '../constants/userConstants'
 
+export const openCreateUSer = dispatch => {
+  dispatch({ type: IS_SHOW_USER_CREATE_FORM })
+}
 // =========================Logout Actions==========================
 export const logout = dispatch => {
   localStorage.removeItem('userInfo')
